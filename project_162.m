@@ -59,7 +59,7 @@ theta_VS = Tb(Db); % check if time is right
 
 XbC = Xb(Db:end); % clean concentration
 
-valb = (1 -exp(-1))*(XbC(end)-XbC(1))+XbC(1);
+valb = (1 -exp(-3))*(XbC(end)-XbC(1))+XbC(1);
 diff_b = abs(XbC - valb);
 [min_b,Ib] = min(diff_b);
 
@@ -87,17 +87,19 @@ VL_final = 1;
 VS_final = 0;
 
 num_VL = [0.45*2.03*(1/0.000323/1.2) 0.45*2.03];
-dem_VL = [(1/0.0003232/1.2) 0];
+den_VL = [(1/0.0003232/1.2) 0];
 
-sim('project_pi_VL')
+sim('closed_pi_VL')
 
 
-%% Run PI params VS (???)
+%% Run PI params VS (IMC)
+
 
 VL_steptime = 0;
-VS_steptime = 1000;
+VS_steptime = 100;
 VL_final = 0;
 VS_final = 1;
+
 
 tauc_VS = 500;
 taui_VS = taup_VS + 0.5*theta_VS;
@@ -106,7 +108,11 @@ kc_VS = (taup_VS)/(kp_VS*(theta_VS + tauc_VS));
 num_VS = [kc_VS*taui_VS kc_VS];
 dem_VS = [taui_VS 0];
 
-sim('project_pi_VS')
+
+num_VS = [1];
+den_VS = [1];
+
+sim('closed_pi_VS')
 
 
 %% Extranneous
