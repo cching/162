@@ -1,107 +1,132 @@
-%% Find VL/L Step
+
+%% Step Test VL
 M1 = 6000; M2 = 50; M3 = 50; M4 = 50; M5 = 50; M6 = 50; M7 = 50; M8 = 50; M9 = 50; M10 = 6000; alfa = 3.0;
 VL_steptime = 100;
 VS_steptime = 0;
 VL_final = 1;
 VS_final = 0;
-tau_i1 = 1956.2;
-Kc1 = 0.45/0.736;
-tau_i2 = 1000;
-Kc2 = .1;
-sim('closed_loop_pi')
+
+sim('open_loop')
+
+    %% Find VL params
+
+    Td = VL_out.time;
+    Xd = VL_out.signals.values;
+
+    % either write code to find delay or go through array
+
+        %dxdt_d = diff(Xd)./diff(Td);
+            %[Md, Dd] = max(abs(dxdt_d));
+
+            Dd = 720; % find index of time delay
+
+            theta_VL = 1032.47989069241; % check if time is right
+
+    XdC = Xd(Dd:end); % clean concentration
+
+    val = (1 -exp(-1))*(XdC(end)-XdC(1))+XdC(1);
+    diff_d = abs(XdC - val);
+    [min_d,Id] = min(diff_d);
+
+    TdC = Td(Dd:end) - Td(Dd); % clean time
+
+    taup_VL = TdC(Id);
+    kp_VL = XdC(end);
+    
+        %% Step Test VS
+        VL_steptime = 0;
+        VS_steptime = 100;
+        VL_final = 0;
+        VS_final = 1;
+        sim('open_loop')
 
 
-%% Find VS/S Step
-% xB end =     0.0274
-% xD end =    0.9895
+            %% Find VS Params
+            %
+            Tb = VS_out.time;
+            Xb = VS_out.signals.values;
 
+            % either write code to find delay or go through array
+            %dxdt_b = diff(Xb)./diff(Tb);
+            %[Mb, Db] = max(abs(dxdt_b));
+
+            Db = 781; % find index of time delay
+
+            theta_VS = Tb(Db); % check if time is right
+
+            XbC = Xb(Db:end); % clean concentration
+
+            valb = (1 -exp(-1))*(XbC(end)-XbC(1))+XbC(1);
+            diff_b = abs(XbC - valb);
+            [min_b,Ib] = min(diff_b);
+
+            TbC = Tb(Db:end) - Tb(Db); % clean time
+
+            taup_VS = TbC(Ib);
+            kp_VS = XbC(end);
+            
+            
+            
+            
+            
+%% Bode
+
+Yd = tf([kp_VL],[taup_VL 1], 'InputDelay', theta_VL);
+figure
+bode(Yd)
+Yb = tf([kp_VS],[taup_VS 1], 'InputDelay', theta_VS);
+figure
+bode(Yb)
+
+
+%% Run PI params VL
+VL_steptime = 100;
+VS_steptime = 0;
+VL_final = 1;
+VS_final = 0;
+num_VL = [0.45*2.03*(1/0.000323/1.2) 0.45*2.03];
+dem_VL = [(1/0.0003232/1.2) 0];
+sim('project_pi_VL')
+
+
+%% Run PI params VS
 
 VL_steptime = 0;
-VS_steptime = 100;
+VS_steptime = 1000;
 VL_final = 0;
 VS_final = 1;
-tau_i1 = 1956.2;
-Kc1 = 0.45/0.736;
-tau_i2 = 1/.000336/1.2;
-Kc2 = 3;
-sim('closed_loop_pi')
+tauc_VS = 500;
+taui_VS = taup_VS + 0.5*theta_VS;
+num_VS = [kc_VS*taui_VS kc_VS];
+kc_VS = (taup_VS)/(kp_VS*(theta_VS + tauc_VS));
+dem_VS = [taui_VS 0];
+sim('project_pi_VS')
 
-%%  blah
+%%
+                
+            % IMC
+            
+%                 tauc_VS = 1;
+%                 kc_VS = (taup_VS)/(kp_VS*(theta_VS + tauc_VS));
+%                 taui_VS = taup_VS + 0.5*theta_VS;
+% 
+%                 tauc_VL = 1;
+%                 kc_VL = (taup_VL)/(kp_VL*(theta_VL + tauc_VL));
+%                 taui_VL = taup_VL + 0.5*theta_VL;
+%                 
+% 
+%                 num_VL = [kc_VL*taui_VL kc_VL];
+%                 dem_VL = [taui_VL 0];
+%                 num_VS = [kc_VS*taui_VS kc_VS];
+%                 dem_VS = [taui_VS 0];
+%     
+  
 
-VL_out.time
-VL_out.signals.values
+                sim('project_controller_10')
 
-Xd = VL_out.signals.values;
-
-
-clean = VL_out.signals.values(127:end)
-clean_time = VL_out.time(127:end) - 900;
-plot(clean,VL_out.time(127:end))
-plot(VL_out.time(127:end),clean)
-plot(VL_out.time(127:end)-900,(clean-clean(1))/clean(end)+1)
-
-mark1 = log(1 - clean./clean(end))
-
-
-y = @(x) 1 -exp(-x./(335.0924))
-plot(VL_out.time, y(VL_out.time)-clean(1))
-
-
-%% blah 2
-
-
-VS_out.time
-VS_out.signals.values
-
-Xd = VS_out.signals.values;
-
-clean_end = VS_out.time(782:end);
-
-clean = VS_out.signals.values(782:end)
-clean_time = clean_end - 1036.6;
+%% find lambda
 
 
-
-plot(clean,clean_end)
-plot(clean_end,clean)
-plot(clean_end-900,(clean-clean(1))/clean(end)+1)
-
-mark1 = log(1 - clean./clean(end))
-
-
-y = @(x) 1 -exp(-x./(335.0924))
-plot(VS_out.time, y(VS_out.time)-clean(1))
-
-
-0.632*(clean(end)-clean(1))
-
-ans =
-
-   -0.0142
-
-clean(1)+ans
-
-ans =
-
-    0.0356
-
-clean_time(68)
-
-ans =
-
-  815.2520
-
-val = (1 -exp(-1))*(clean(end)-clean(1))+clean(1)
-diff = abs(clean - val);
-[M,I] = min(diff)
-
-taup2 = clean_time(I)
-
-find(diff == min(diff))
-
-
-Y = tf([clean(end)],[taup2 1],'InputDelay', 1036.6);
-bode(Y)
 
 
 
