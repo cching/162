@@ -100,12 +100,12 @@ VS_steptime = 100;
 VL_final = 0;
 VS_final = 1;
 
-lambda = 15000;
+lambda = 50;
 kc_VS = (taup_VS + 0.5*theta_VS)/(kp_VS*lambda);
 tau_i = taup_VS + 0.5*theta_VS;
 
-num_VS = [kc_VS*tau_i kc_VS];
-den_VS = [tau_i 0];
+num_VS = [0.45*60.8*(1/0.000257/1.2) 0.45*60.8];
+den_VS = [(1/0.000257/1.2) 0];
 sim('closed_pi_VS')
 
 
