@@ -30,7 +30,7 @@ end
 
 Dd = k;
 
-theta_VL = Tb(Dd); % check if time is right
+theta_VL = Td(Dd); % check if time is right
 
 XdC = Xd(Dd:end); % clean concentration
 
@@ -88,7 +88,7 @@ taup_VS = TbC(Ib);
 kp_VS = XbC(end);
 
 
-%% Run PI params VL (Ziegler-Nichols)
+%% Run PI params VL (IMC)
 
 VL_steptime = 100;
 VS_steptime = 0;
@@ -122,52 +122,42 @@ den_VS = [tau_i 0];
 sim('closed_pi_VS')
 
 
-%% Extranneous
-
-% IMC
-
-%                 tauc_VS = 1;
-%                 kc_VS = (taup_VS)/(kp_VS*(theta_VS + tauc_VS));
-%                 taui_VS = taup_VS + 0.5*theta_VS;
-% 
-%                 tauc_VL = 1;
-%                 kc_VL = (taup_VL)/(kp_VL*(theta_VL + tauc_VL));
-%                 taui_VL = taup_VL + 0.5*theta_VL;
-%                 
-% 
-%                 num_VL = [kc_VL*taui_VL kc_VL];
-%                 dem_VL = [taui_VL 0];
-%                 num_VS = [kc_VS*taui_VS kc_VS];
-%                 dem_VS = [taui_VS 0];
-%     
-
-
-
-%% find lambda
-
 
 %% Problem 7
-%% Step Test VL
+
+
+%% Find VL params
+
+
 VL_steptime = 100;
 VS_steptime = 0;
 VL_final = 1;
 VS_final = 0;
 
-sim('open_loop')
 
-%% Find VL params
+sim('closed_pi_VL')
 
-Td = VL_out.time;
-Xd = VL_out.signals.values;
+%% 6i
+Td = QT_XD.time;
+Xd = QT_XD.signals.values;
 
 % either write code to find delay or go through array
 
 %dxdt_d = diff(Xd)./diff(Td);
 %[Md, Dd] = max(abs(dxdt_d));
 
-Dd = 720; % find index of time delay
+k = 1;
+for i = 1:length(Xd)
+    if Xd(1) == Xd(i)
+        k = k + 1;
+    else
+        break
+    end
+end
 
-theta_VL = 1032.47989069241; % check if time is right
+Dd = k;
+
+theta_VL = Tb(Dd); % check if time is right
 
 XdC = Xd(Dd:end); % clean concentration
 
@@ -179,19 +169,80 @@ TdC = Td(Dd:end) - Td(Dd); % clean time
 
 taup_VL = TdC(Id);
 kp_VL = XdC(end);
+
 VL_steptime = 100;
 VS_steptime = 0;
 VL_final = 1;
 VS_final = 0;
 
-num_VL = [0.45*2.03*(1/0.000323/1.2) 0.45*2.03];
-den_VL = [(1/0.000323/1.2) 0];
+lambda_VL = 500;
+kc_VL = (taup_VL + 0.5*theta_VL)/(kp_VL*lambda_VL);
+tau_i = taup_VL + 0.5*theta_VL;
 
-sim('closed_closed_pi_VL')
+num_VL_6i = [kc_VL*tau_i kc_VL];
+den_VL_6i = [tau_i 0];
+
+sim('closed_closed_pi_pi_VL')
 
 
 
+%% Find VS params
 
+
+VL_steptime = 0;
+VS_steptime = 100;
+VL_final = 0;
+VS_final = 1;
+
+
+sim('closed_pi_VS')
+
+%% 6i
+Td = QT_XB.time;
+Xd = QT_XB.signals.values;
+
+% either write code to find delay or go through array
+
+%dxdt_d = diff(Xd)./diff(Td);
+%[Md, Dd] = max(abs(dxdt_d));
+
+k = 1;
+for i = 1:length(Xd)
+    if Xd(1) == Xd(i)
+        k = k + 1;
+    else
+        break
+    end
+end
+
+Dd = k;
+
+theta_VL = Tb(Dd); % check if time is right
+
+XdC = Xd(Dd:end); % clean concentration
+
+val = (1 -exp(-1))*(XdC(end)-XdC(1))+XdC(1);
+diff_d = abs(XdC - val);
+[min_d,Id] = min(diff_d);
+
+TdC = Td(Dd:end) - Td(Dd); % clean time
+
+taup_VL = TdC(Id);
+kp_VL = XdC(end);
+
+VL_steptime = 100;
+VS_steptime = 0;
+VL_final = 1;
+VS_final = 0;
+
+lambda_VL = 100000000;
+kc_VL = (taup_VL + 0.5*theta_VL)/(kp_VL*lambda_VL);
+tau_i = taup_VL + 0.5*theta_VL;
+
+num_VS_6i = [kc_VL*tau_i kc_VL];
+den_VS_6i = [tau_i 0];
+
+sim('closed_closed_pi_pi_VS')
 
 
 
