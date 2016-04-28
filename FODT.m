@@ -1,4 +1,5 @@
 function [taup, Kp, theta] = FODT(x,t)
+% this function find the parameters of a FODT process 
 
 k = 1;
 for i = 1:length(x)
@@ -9,20 +10,18 @@ for i = 1:length(x)
     end
 end
 
-delay = k;
 
-theta = t(delay); % check if time is right
-
-xc = x(delay:end); % clean concentration
+xc = x(k:end); % concentration without time delay
 
 val = (1 -exp(-1))*( xc(end)-xc(1) ) + xc(1);
 % convert to deviation, and find value of first time constant
 
 dx = abs(xc - val);
+[n ,I] = min(dx);
+% find index of time constant
 
-[nothing ,I] = min(dx);
+tc = t(k:end) - t(k); % clean time
 
-tc = t(delay:end) - t(delay); % clean time
-
-taup = tc(I);
-Kp = xc(end);
+theta = t(k); % gets value of time delay
+taup = tc(I); % process time constant (based off of clean time)
+Kp = xc(end); % process gain
