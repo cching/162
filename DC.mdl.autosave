@@ -86,7 +86,7 @@ Model {
   LastModifiedBy	  "chris"
   ModifiedDateFormat	  "%<Auto>"
   LastModifiedDate	  "Thu Apr 28 15:18:59 2016"
-  RTWModifiedTimeStamp	  383757539
+  RTWModifiedTimeStamp	  383757542
   ModelVersionFormat	  "1.%<AutoIncrement:212>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
@@ -1218,27 +1218,27 @@ Model {
       Name		      "QT1scope"
       SID		      "32"
       Ports		      [1]
-      Position		      [1075, 44, 1105, 76]
+      Position		      [1170, 14, 1200, 46]
       ZOrder		      -32
       ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
       "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
       "ources','WiredSimulink',true,'DataLoggingSaveFormat','StructureWithTime','DataLoggingLimitDataPoints',true,'Data"
       "LoggingDecimation','1','DataLoggingDecimateData',true),extmgr.Configuration('Visuals','Time Domain',true,'Serial"
-      "izedDisplays',{struct('MinYLimReal','0.54148','MaxYLimReal','1.02872','YLabelReal','','MinYLimMag','0.54148','Ma"
-      "xYLimMag','1.02872','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],"
-      "'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0"
-      "745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0"
-      "745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156"
-      "863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',1,'LineNames'"
-      ",{{'QT1'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','0.54148','MaxYLimR"
-      "eal','1.02872','YLabelReal','','MinYLimMag','0.54148','MaxYLimMag','1.02872','LegendVisibility','off','XGrid',tr"
-      "ue,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0."
-      "686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353"
-      " 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0"
-      ".0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}"
-      "},'UserDefinedChannelNames',{{}},'NumLines',0,'LineNames',{{[]}},'ShowContent',true,'Placement',1)),extmgr.Confi"
-      "guration('Tools','Plot Navigation',true),extmgr.Configuration('Tools','Measurements',true,'Version','2015b')),'V"
-      "ersion','2015b','Location',[893 95 1262 414])"
+      "izedDisplays',{struct('MinYLimReal','0.9789','MaxYLimReal','0.9899','YLabelReal','','MinYLimMag','0.9789','MaxYL"
+      "imMag','0.9899','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'Axe"
+      "sTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.07450"
+      "98039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.07450"
+      "98039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863]"
+      ",'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',1,'LineNames',{{'"
+      "QT1'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','0.9789','MaxYLimReal',"
+      "'0.9899','YLabelReal','','MinYLimMag','0.9789','MaxYLimMag','0.9899','LegendVisibility','off','XGrid',true,'YGri"
+      "d',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.68627450"
+      "9803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078"
+      "431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235"
+      "294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserD"
+      "efinedChannelNames',{{}},'NumLines',0,'LineNames',{{[]}},'ShowContent',true,'Placement',1)),extmgr.Configuration"
+      "('Tools','Plot Navigation',true),extmgr.Configuration('Tools','Measurements',true,'Version','2015b')),'Version',"
+      "'2015b','Location',[893 95 1262 414])"
     }
     Block {
       BlockType		      TransportDelay
@@ -2124,6 +2124,7 @@ Model {
       ZOrder		      106
       SrcBlock		      "QT1"
       SrcPort		      1
+      Points		      [60, 0; 0, -30]
       DstBlock		      "QT1scope"
       DstPort		      1
     }
